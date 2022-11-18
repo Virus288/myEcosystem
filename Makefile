@@ -5,5 +5,6 @@ composeUp:
  	--env-file ./config/.env
 
 prepare:
-	npm instal --prefix ./services/gateway \
-	&& chmod +x .husky/pre-commit
+	npm install --prefix ./services/gateway \
+	&& chmod +x .husky/pre-commit \
+	&& npm run prepare

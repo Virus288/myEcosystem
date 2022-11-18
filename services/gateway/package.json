@@ -15,11 +15,10 @@
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "cross-env NODE_ENV=development eslint . --ext .ts",
     "listErrors": "node_modules/.bin/tsc --noEmit --skipLibCheck",
-    "prepare": "husky install",
     "lintStaged": "npx lint-staged"
   },
   "lint-staged": {
-    "*.{ts}": [
+    "*.ts": [
       "cross-env NODE_ENV=development eslint --cache"
     ],
     "*.json,.{eslintrc,prettierrc}": [
@@ -49,7 +48,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^8.0.1",
     "nodemon": "^2.0.20",
     "prettier": "^2.4.1",
     "rimraf": "^3.0",
