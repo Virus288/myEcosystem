@@ -1,4 +1,4 @@
-# Gateway 
+# My ecosystem - Gateway
 
 ## 1. How to start
 

@@ -1,4 +1,4 @@
-import * as types from '../types';
+import type * as types from '../types';
 
 const handleErr = (err: types.IFullError, res: types.ILocalUser): void => {
   if (process.env.NODE_END !== 'prod') console.trace(err);

@@ -6,6 +6,7 @@ import type * as types from '../types';
 import * as errors from '../errors';
 import router from './router';
 import express from 'express';
+import userValidation from '../tools/token';
 
 export default class Router {
   private readonly app: express.Express;
@@ -40,6 +41,7 @@ export default class Router {
    */
   private initMiddleware(): void {
     this.middleware.generateMiddleware(this.app);
+    this.app.use(userValidation);
   }
 
   /**

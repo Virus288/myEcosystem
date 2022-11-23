@@ -139,3 +139,23 @@ export class NoDataProvided extends FullError {
     this.status = 400;
   }
 }
+
+export class UserDoesNotExist extends FullError {
+  constructor() {
+    super('UserDoesNotExist');
+    this.message = 'User does not exist';
+    this.name = 'UserDoesNotExist';
+    this.code = '015';
+    this.status = 400;
+  }
+}
+
+export class IncorrectCredentials extends FullError {
+  constructor(message?: string) {
+    super('IncorrectCredentials');
+    this.message = message ?? 'Incorrect credentials';
+    this.name = 'IncorrectCredentials';
+    this.code = '016';
+    this.status = 401;
+  }
+}

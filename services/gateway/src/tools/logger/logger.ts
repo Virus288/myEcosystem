@@ -5,7 +5,7 @@ import * as errors from '../../errors';
 let path = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
 const cache = process.platform === 'win32' ? 'AppData/Roaming/' : '.cache';
 const name = process.env.APP_NAME ?? process.env.npm_package_name;
-path += `/${cache}/${name}/`;
+path += `/${cache}/ecosystem/${name}/`;
 
 if (!path) throw new errors.MissingProcessPlatform();
 const levels = ['error', 'warn', 'info'];
