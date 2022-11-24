@@ -18,12 +18,12 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodbdata:/data/db
+      - mongodbData:/data/db
     networks:
       back_default:
     container_name: 'mongo'
   gateway:
-    build: ./gateway
+    build: ./services/gateway
     ports:
       - "5003:5003"
     networks:
@@ -32,7 +32,7 @@ services:
 
 volumes:
   mongodbData:
-    external: true
+    external: false
 
 networks:
   back_default:

@@ -1,8 +1,7 @@
 #!make
 composeUp:
 	sudo -S docker-compose build \
- 	&& sudo docker-compose up -d \
- 	--env-file ./config/.env
+ 	&& sudo docker-compose --env-file ./.env up -d
 
 prepare:
 	npm install --prefix ./services/gateway \
