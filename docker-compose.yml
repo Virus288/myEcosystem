@@ -6,7 +6,7 @@ services:
       - RABBITMQ_DEFAULT_USER=${RABBIT_CLIENT}
       - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
     ports:
-      - "15672:15672"
+      - "5672:5672"
     container_name: 'rabbit'
     networks:
       back_default:
@@ -18,21 +18,26 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodbdata:/data/db
+      - mongodbData:/data/db
+    container_name: 'mongo'
     networks:
       back_default:
-    container_name: 'mongo'
   gateway:
-    build: ./gateway
+    build: ./services/gateway
     ports:
       - "5003:5003"
+    container_name: 'gateway'
     networks:
       back_default:
-    container_name: 'gateway'
+  users:
+    build: ./services/users
+    container_name: 'users'
+    networks:
+      back_default:
 
 volumes:
   mongodbData:
-    external: true
+    external: false
 
 networks:
   back_default:

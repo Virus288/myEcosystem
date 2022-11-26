@@ -6,9 +6,15 @@ export interface IUsersTokens {
   tempId: string;
   validated: boolean;
   newToken?: string;
-  type: enums.USER_TYPES;
+  type: enums.EUserTypes;
 }
 
 export interface ILocalUser extends express.Response {
   locals: IUsersTokens;
+}
+
+export interface IUserCredentials {
+  mainToken: string;
+  refreshToken: string;
+  userId: string;
 }

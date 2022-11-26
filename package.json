@@ -1,18 +1,16 @@
 {
   "name": "ecosystem",
-  "version": "1.0.0",
+  "version": "0.1.02",
   "description": "Backend services made in soa",
   "author": "https://github.com/Virus288",
   "license": "Apache-2.0",
   "private": false,
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install"
   },
   "devDependencies": {
-    "husky": "^8.0.2",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.2"
   }
 }
-

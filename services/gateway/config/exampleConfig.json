@@ -1,4 +1,7 @@
 {
+  "amqpURI": "rabbitUrl",
+  "corsOrigin": "*",
   "httpPort": 80,
-  "corsOrigin": "*"
+  "token": "mainToken",
+  "refToken": "refreshToken"
 }

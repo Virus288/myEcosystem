@@ -1,0 +1,5 @@
+{
+  "amqpURI": "rabbitUrl",
+  "token": "mainToken",
+  "refToken": "refreshToken"
+}

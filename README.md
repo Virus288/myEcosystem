@@ -15,12 +15,11 @@
 If you are planning on using docker-compose, you'll need to add `.env` file. You can edit `example.env` since it
 contains all variables required to start project
 
-If you are not planning on using docker-compose, you can start each service manually. Each service contains `README`
-file with information, on how to start it
+Otherwise, you can start each service manually. Each service contains `README` file with information, on how to start it
 
 ## 2. How to build
 
-### 2.1 Automated way
+### 2.1 Automated way ( Does not work on windows by default )
 
 ```shell
 make prepare
@@ -31,13 +30,14 @@ make prepare
 #### Install dependencies for husky
 
 ```shell
-npm install 
+npm install
 ```
 
 #### Install dependencies for each service
 
 ```shell
 npm install --prefix ./services/gateway
+npm install --prefix ./services/users
 ```
 
 #### Prepare environment
