@@ -1,7 +1,3 @@
-/**/*.js
-node_modules
-build
-.eslintrc.json
 jest.config.default.ts
 jest.config.e2e.ts
 jest.config.ts

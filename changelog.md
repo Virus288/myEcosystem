@@ -1,6 +1,15 @@
 # Changelog
 
-### 0.1.02 Fixed docker-compose
+### 0.1.03
+
+```markdown
+- Fixed incorrect port for rabbitMQ in docker-compose file
+- Added validation for rabbit queues removing when component die
+- Added basic validation for user requests
+- Added basic tests for user requests
+```
+
+### 0.1.02
 
 ```markdown
 - Added fix for docker-compose

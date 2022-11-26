@@ -5,3 +5,5 @@ echo "Running lint-staged"
 npm run --prefix ./services/gateway lintStaged
 echo "Running tsc"
 npm run --prefix ./services/gateway listErrors
+echo "Running tests"
+npm run --prefix ./services/gateway test

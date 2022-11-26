@@ -12,7 +12,8 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "eslint-plugin-prettier"
+    "eslint-plugin-prettier",
+    "jest"
   ],
   "extends": [
     "eslint-config-prettier",
@@ -112,5 +113,9 @@
         "avoidEscape": true
       }
     ]
-  }
+  },
+  "ignorePatterns": [
+    "*.test.ts",
+    "jest.config.*"
+  ]
 }

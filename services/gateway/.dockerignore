@@ -19,5 +19,9 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/tests
+jest.config.default.ts
+jest.config.e2e.ts
+jest.config.ts
+jest.config.unit.ts
 README.md
-

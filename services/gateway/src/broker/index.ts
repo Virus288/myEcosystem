@@ -100,10 +100,12 @@ export default class Broker {
   }
 
   private async createQueue(): Promise<void> {
-    await this.channel.assertQueue(enums.EServices.Gateway, { durable: true });
-    await this.channel.assertQueue(enums.EServices.Users, { durable: true });
+    Log.log('Rabbit', `Creating channel: ${enums.EAmqQueues.Gateway}`);
+    Log.log('Rabbit', `Creating channel: ${enums.EAmqQueues.Users}`);
+    await this.channel.assertQueue(enums.EAmqQueues.Gateway, { durable: true });
+    await this.channel.assertQueue(enums.EAmqQueues.Users, { durable: true });
     await this.channel.consume(
-      enums.EServices.Gateway,
+      enums.EAmqQueues.Gateway,
       (message) => {
         const payload = JSON.parse(message.content.toString()) as types.IRabbitMessage;
         if (payload.target === enums.EMessageTypes.Heartbeat) {
@@ -137,6 +139,7 @@ export default class Broker {
     const services = Object.entries(this.services);
     services.forEach((service) => {
       if (service[1].dead) {
+        Log.log('Rabbit', 'Reviving service');
         this.retryHeartbeat(service[0] as types.IAvailableServices);
       } else {
         service[1].timeout = setTimeout(() => this.checkHeartbeat(service[0] as types.IAvailableServices), 30000);
