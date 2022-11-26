@@ -37,6 +37,7 @@ npm install
 
 ```shell
 npm install --prefix ./services/gateway
+npm install --prefix ./services/users
 ```
 
 #### Prepare environment

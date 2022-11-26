@@ -1,5 +1,12 @@
 # Changelog
 
+### 0.2.0 Wrote users service
+
+```markdown
+- Added Users service
+- Removed unnecessary error types
+```
+
 ### 0.1.03
 
 ```markdown

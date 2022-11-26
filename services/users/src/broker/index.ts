@@ -2,9 +2,9 @@ import * as enums from '../enums';
 import type * as types from '../types';
 import amqplib from 'amqplib';
 import getConfig from '../tools/configLoader';
-import Controller from './controller';
-import { FullError, InternalError } from '../errors';
+import { FullError } from '../errors';
 import Log from '../tools/logger/log';
+import Router from './router';
 
 export default class Broker {
   private retryTimeout: NodeJS.Timeout;
@@ -13,25 +13,19 @@ export default class Broker {
 
   private channel: amqplib.Channel;
   private channelTries = 0;
+  private queue: Record<string, types.IRabbitMessage> = {};
 
-  private services: {
-    [key in types.IAvailableServices]: { timeout: NodeJS.Timeout; retries: number; dead: boolean };
-  } = {
-    [enums.EServices.Users]: { timeout: undefined, retries: 0, dead: true },
-  };
-
-  private controller: Controller;
+  private router: Router;
 
   init(): void {
-    this.controller = new Controller();
+    this.router = new Router();
     this.initCommunication();
   }
 
-  sendLocally(target: enums.EUserTargets, res: types.ILocalUser, payload: unknown, service: enums.EServices): void {
-    const queue = this.services[service as types.IAvailableServices];
-    if (queue.dead) return this.sendError(res, new InternalError());
-
-    this.controller.sendLocally(target, res, payload, service, this.channel);
+  send(userId: string, payload: unknown, target: enums.EMessageTypes): void {
+    const body = { ...this.queue[userId], payload, target };
+    delete this.queue[userId];
+    this.channel.sendToQueue(enums.EAmqQueues.Gateway, Buffer.from(JSON.stringify(body)));
   }
 
   close(): void {
@@ -104,87 +98,29 @@ export default class Broker {
     await this.channel.assertQueue(enums.EAmqQueues.Gateway, { durable: true });
     await this.channel.assertQueue(enums.EAmqQueues.Users, { durable: true });
     await this.channel.consume(
-      enums.EAmqQueues.Gateway,
+      enums.EAmqQueues.Users,
       (message) => {
         const payload = JSON.parse(message.content.toString()) as types.IRabbitMessage;
         if (payload.target === enums.EMessageTypes.Heartbeat) {
-          this.validateHeartbeat(payload.payload as types.IAvailableServices);
+          return this.send(undefined, enums.EServices.Users, enums.EMessageTypes.Heartbeat);
         } else {
-          this.errorWrapper(() => this.controller.sendExternally(payload));
+          this.queue[payload.user.userId ?? payload.user.tempId] = payload;
+          this.errorWrapper(
+            async () => await this.router.handleMessage(payload),
+            payload.user.userId ?? payload.user.tempId,
+          );
         }
       },
       { noAck: true },
     );
-    this.validateConnections();
+    return this.send(undefined, enums.EServices.Users, enums.EMessageTypes.Heartbeat);
   }
-
-  private validateHeartbeat(target: types.IAvailableServices): void {
-    const service = this.services[target];
-    clearTimeout(service.timeout);
-
-    if (service.dead) {
-      Log.log(target, 'Resurrected');
-    }
-
-    this.services[target] = {
-      ...this.services[target],
-      timeout: setTimeout(() => this.checkHeartbeat(target), 30000),
-      dead: false,
-      retries: 0,
-    };
-  }
-
-  private validateConnections(): void {
-    const services = Object.entries(this.services);
-    services.forEach((service) => {
-      if (service[1].dead) {
-        Log.log('Rabbit', 'Reviving service');
-        this.retryHeartbeat(service[0] as types.IAvailableServices);
-      } else {
-        service[1].timeout = setTimeout(() => this.checkHeartbeat(service[0] as types.IAvailableServices), 30000);
-      }
-    });
-  }
-
-  private retryHeartbeat(target: types.IAvailableServices): void {
-    const service = this.services[target];
-    service.dead = true;
-    if (service.retries >= 10) {
-      Log.error(target, `Is down!. Stopped retrying after ${service.retries} tries.`);
-      this.closeDeadQueue(target).catch((err) => {
-        Log.error('Rabbit', "Couldn't clear queue");
-        Log.error('Rabbit', err);
-      });
-    } else {
-      Log.warn(target, `Is down!. Trying to connect for ${service.retries + 1} time.`);
-      this.controller.sendHeartbeat(this.channel, target);
-      service.timeout = setTimeout(() => this.retryHeartbeat(target), 5000);
-      service.retries++;
-    }
-  }
-
-  private checkHeartbeat(target: types.IAvailableServices): void {
-    this.controller.sendHeartbeat(this.channel, target);
-    this.services[target].timeout = setTimeout(() => this.retryHeartbeat(target), 5000);
-  }
-
-  private closeDeadQueue = async (target: types.IAvailableServices): Promise<void> => {
-    switch (target) {
-      case enums.EServices.Users:
-        await this.channel.purgeQueue(enums.EAmqQueues.Users);
-        break;
-    }
-    return this.controller.fulfillDeadQueue(target);
-  };
 
   private async closeChannel(): Promise<void> {
     if (this.retryTimeout) {
       clearTimeout(this.retryTimeout);
     }
-    await this.channel.purgeQueue(enums.EAmqQueues.Gateway);
     await this.channel.purgeQueue(enums.EAmqQueues.Users);
-
-    await this.channel.deleteQueue(enums.EAmqQueues.Gateway);
     await this.channel.deleteQueue(enums.EAmqQueues.Users);
 
     await this.channel.close().catch(() => null);
@@ -212,16 +148,14 @@ export default class Broker {
     clearTimeout(this.retryTimeout);
   }
 
-  private sendError(user: types.ILocalUser, error: FullError): void {
-    const { message, code, name, status } = error;
-    user.status(status).send(JSON.stringify({ message, code, name }));
-  }
-
-  private errorWrapper(func: () => void): void {
-    try {
-      func();
-    } catch (err) {
-      Log.error('Rabbit', err);
-    }
+  private errorWrapper(func: () => Promise<void>, user: string): void {
+    func().catch((err) => {
+      const { userId, message, name, code, status } = err as FullError;
+      if (!status) {
+        this.send(userId ?? user, { message, name, code, status: 500 }, enums.EMessageTypes.Error);
+      } else {
+        this.send(userId ?? user, { message, name, code, status }, enums.EMessageTypes.Error);
+      }
+    });
   }
 }

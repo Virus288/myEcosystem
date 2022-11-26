@@ -3,7 +3,10 @@
 
 echo "Running lint-staged"
 npm run --prefix ./services/gateway lintStaged
+npm run --prefix ./services/users lintStaged
 echo "Running tsc"
 npm run --prefix ./services/gateway listErrors
+npm run --prefix ./services/users listErrors
 echo "Running tests"
 npm run --prefix ./services/gateway test
+npm run --prefix ./services/users test

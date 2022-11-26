@@ -29,6 +29,11 @@ services:
     container_name: 'gateway'
     networks:
       back_default:
+  users:
+    build: ./services/users
+    container_name: 'users'
+    networks:
+      back_default:
 
 volumes:
   mongodbData:
