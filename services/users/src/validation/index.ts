@@ -18,13 +18,11 @@ export default class Validator {
     const regex = new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
     const isEmail = regex.test(email);
 
-    if (!email) throw new errors.IncorrectCredentials(tempId, 'Email not provided');
     if (!isEmail) throw new errors.IncorrectCredentials(tempId, 'Not valid email address');
   }
 
   static validatePasswords(tempId: string, password: string, password2?: string): void {
     Validator.validatePassword(tempId, password);
-    if (!password2) throw new errors.IncorrectCredentials(tempId, 'Password2 not provided');
     if (password !== password2) throw new errors.IncorrectCredentials(tempId, 'Passwords not the same');
   }
 
@@ -32,29 +30,34 @@ export default class Validator {
     const regex = new RegExp(/^.*(?=.{6,})(?=.*[a-zA-Z])(?=.*\d).*$/);
     const isPassword = regex.test(password);
 
-    if (!password) throw new errors.IncorrectCredentials(tempId, 'Password not provided');
-    if (password.length < 6) throw new errors.IncorrectCredentials(tempId, 'Password should be at least 6 characters');
-    if (password.length > 100)
-      throw new errors.IncorrectCredentials(tempId, 'Password should be less than 100 characters');
-    if (!isPassword)
+    if (password.length < 6)
+      throw new errors.IncorrectCredentials(tempId, 'Password should be at least 6 characters long');
+    if (password.length > 200) {
+      throw new errors.IncorrectCredentials(tempId, 'Password should be less than 200 characters');
+    }
+    if (!isPassword) {
       throw new errors.IncorrectCredentials(
         tempId,
         'Password should contain at least 1 digit, 6 letter, 1 upper case letter and 1 lower case letter',
       );
+    }
   }
 
   static validateUserName(tempId: string, name: string): void {
-    const regex = new RegExp(/\d/);
-    const containsInt = regex.test(name);
+    const regex = new RegExp(/^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/);
+    const isIncorrect = regex.test(name);
 
-    if (!name) throw new errors.IncorrectCredentials(tempId, 'Name not provided');
-    if (containsInt) throw new errors.IncorrectCredentials(tempId, 'Name should not contain digits');
-    if (name.length < 2) throw new errors.IncorrectCredentials(tempId, 'Name should be at least 2 characters');
-    if (name.length > 50) throw new errors.IncorrectCredentials(tempId, 'Name should be less than 50 characters');
+    if (!isIncorrect)
+      throw new errors.IncorrectCredentials(
+        tempId,
+        'Name should only contain arabic letters, numbers and special characters',
+      );
+    if (name.length < 3) throw new errors.IncorrectCredentials(tempId, 'Name should be at least 3 characters');
+    if (name.length > 30) throw new errors.IncorrectCredentials(tempId, 'Name should be less than 30 characters');
   }
 
   static async compare(tempId: string, password: string, hashed: string): Promise<void> {
     const auth = await bcrypt.compare(password, hashed);
-    if (!auth) throw new errors.IncorrectCredentials(tempId, 'Password invalid');
+    if (!auth) throw new errors.IncorrectLogin(tempId);
   }
 }

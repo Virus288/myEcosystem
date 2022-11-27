@@ -122,3 +122,25 @@ export class InvalidMongooseType extends FullError {
     this.userId = userId;
   }
 }
+
+export class IncorrectLogin extends FullError {
+  constructor(userId: string) {
+    super('IncorrectLogin');
+    this.message = 'Incorrect login or password';
+    this.name = 'IncorrectLogin';
+    this.code = '012';
+    this.status = 400;
+    this.userId = userId;
+  }
+}
+
+export class UsernameAlreadyInUse extends FullError {
+  constructor(userId: string) {
+    super('UsernameAlreadyInUse');
+    this.message = 'Selected username is already in use';
+    this.name = 'UsernameAlreadyInUse';
+    this.code = '007';
+    this.status = 401;
+    this.userId = userId;
+  }
+}

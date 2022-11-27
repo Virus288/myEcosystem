@@ -7,7 +7,7 @@ export const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Login not provided'],
     minlength: [2, 'Min length is 2 characters'],
-    maxlength: [50, 'Max name length is 50 characters'],
+    maxlength: [30, 'Max name length is 30 characters'],
   },
   email: {
     type: String,
@@ -21,7 +21,6 @@ export const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password not provided'],
     minlength: [6, 'Min length is 6 characters'],
-    maxlength: [300, 'Max name length is 300 characters'],
   },
   verified: {
     type: Boolean,

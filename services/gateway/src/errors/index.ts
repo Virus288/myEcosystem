@@ -54,3 +54,13 @@ export class NoDataProvided extends FullError {
     this.status = 400;
   }
 }
+
+export class IncorrectBodyType extends FullError {
+  constructor() {
+    super('IncorrectBodyType');
+    this.message = 'Incorrect body type';
+    this.name = 'IncorrectBodyType';
+    this.code = '006';
+    this.status = 400;
+  }
+}

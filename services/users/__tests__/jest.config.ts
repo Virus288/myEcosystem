@@ -3,7 +3,7 @@ import defaultConfig from './jest.config.default';
 
 const config: Config = {
   ...defaultConfig,
-  roots: ['./tests/unit'],
+  roots: ['./'],
 };
 
 export default config;
