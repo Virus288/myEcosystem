@@ -1,7 +1,7 @@
-import { IUserLean } from '../../src/types';
-import * as enums from '../../src/enums';
-import User from '../../src/modules/model';
-import { hashPassword } from '../../src/tools/token';
+import { IUserLean } from '../../../src/types';
+import * as enums from '../../../src/enums';
+import User from '../../../src/modules/model';
+import { hashPassword } from '../../../src/tools/token';
 
 export default class FakeUser {
   state: IUserLean = {
@@ -45,8 +45,19 @@ export default class FakeUser {
     await NewUser.save();
   }
 
+  clean(): void {
+    this.state = {
+      _id: undefined,
+      email: undefined,
+      login: undefined,
+      password: undefined,
+      type: undefined,
+      verified: false,
+    };
+  }
+
   async cleanUp(): Promise<void> {
-    if (!this.state.login) return;
-    return User.findOneAndDelete({ login: this.state.login });
+    await User.findOneAndDelete({ email: this.state.email });
+    this.clean();
   }
 }

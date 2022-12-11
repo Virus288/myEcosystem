@@ -10,4 +10,12 @@ export default class Rooster {
   async get(data: string): Promise<types.IUser[]> {
     return User.find({ $or: [{ login: data }, { email: data }] });
   }
+
+  async getByEmail(data: string): Promise<types.IUser[]> {
+    return User.find({ email: data });
+  }
+
+  async getByLogin(data: string): Promise<types.IUser[]> {
+    return User.find({ login: data });
+  }
 }

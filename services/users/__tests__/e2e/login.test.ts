@@ -5,13 +5,11 @@ import * as types from '../../src/types';
 import * as errors from '../../src/errors';
 import * as enums from '../../src/enums';
 import Controller from '../../src/modules/controller';
-import Database from '../mockDB';
+import Database from '../utils/mockDB';
+import fakeData from '../utils/fakeData.json';
 
 describe('Login', () => {
-  const loginData: types.ILoginReq = {
-    login: 'Test',
-    password: 'Test123',
-  };
+  const loginData: types.ILoginReq = fakeData.users[0];
   const localUser: types.ILocalUser = {
     userId: undefined,
     tempId: 'tempId',
@@ -80,7 +78,7 @@ describe('Login', () => {
   });
 
   describe('Should pass', () => {
-    it(`Validated login`, async () => {
+    it(`Validated`, async () => {
       const db = new Database();
       await db.user
         .login(loginData.login)

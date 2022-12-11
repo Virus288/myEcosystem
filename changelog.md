@@ -1,5 +1,13 @@
 # Changelog
 
+### 0.2.2
+
+```markdown
+- Added db tests for users
+- Added e2e tests for gateway
+- Connected mongoDB for users
+```
+
 ### 0.2.1
 
 ```markdown

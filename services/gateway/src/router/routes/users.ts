@@ -12,7 +12,7 @@ router.post('/login', (req, res: types.ILocalUser) => {
   try {
     const data = req.body as types.ILoginReq;
     Validator.validateLogin(data);
-    State.Broker.sendLocally(enums.EUserTargets.Login, res, data, EServices.Users);
+    State.broker.sendLocally(enums.EUserTargets.Login, res, data, EServices.Users);
   } catch (err) {
     const { message, code, name, status } = err as FullError;
     res.status(status).json({ message, code, name });
@@ -23,7 +23,7 @@ router.post('/register', (req, res: types.ILocalUser) => {
   try {
     const data = req.body as types.IRegisterReq;
     Validator.validateRegister(data);
-    State.Broker.sendLocally(enums.EUserTargets.Register, res, data, EServices.Users);
+    State.broker.sendLocally(enums.EUserTargets.Register, res, data, EServices.Users);
   } catch (err) {
     const { message, code, name, status } = err as FullError;
     res.status(status).json({ message, code, name });

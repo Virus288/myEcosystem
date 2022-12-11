@@ -5,15 +5,11 @@ import * as types from '../../src/types';
 import * as errors from '../../src/errors';
 import * as enums from '../../src/enums';
 import Controller from '../../src/modules/controller';
-import Database from '../mockDB';
+import Database from '../utils/mockDB';
+import fakeData from '../utils/fakeData.json';
 
 describe('Register', () => {
-  const registerData: types.IRegisterReq = {
-    login: 'Test',
-    email: 'test@test.test',
-    password: 'Test123',
-    password2: 'Test123',
-  };
+  const registerData: types.IRegisterReq = fakeData.users[0];
   const localUser: types.ILocalUser = {
     userId: undefined,
     tempId: 'tempId',
@@ -37,32 +33,32 @@ describe('Register', () => {
       it(`Missing login`, () => {
         const clone = structuredClone(registerData);
         delete clone.login;
-        controller.login(clone, localUser).catch((err) => {
-          expect(err).toEqual(new errors.IncorrectLogin(localUser.tempId));
+        controller.register(clone, localUser).catch((err) => {
+          expect(err).toEqual(new errors.IncorrectCredentials(localUser.tempId, 'Name missing'));
         });
       });
 
       it(`Missing password`, () => {
         const clone = structuredClone(registerData);
         delete clone.password;
-        controller.login(clone, localUser).catch((err) => {
-          expect(err).toEqual(new errors.IncorrectLogin(localUser.tempId));
+        controller.register(clone, localUser).catch((err) => {
+          expect(err).toEqual(new errors.IncorrectCredentials(localUser.tempId, 'Password missing'));
         });
       });
 
       it(`Missing password2`, () => {
         const clone = structuredClone(registerData);
         delete clone.password2;
-        controller.login(clone, localUser).catch((err) => {
-          expect(err).toEqual(new errors.IncorrectLogin(localUser.tempId));
+        controller.register(clone, localUser).catch((err) => {
+          expect(err).toEqual(new errors.IncorrectCredentials(localUser.tempId, 'Password2 missing'));
         });
       });
 
       it(`Missing email`, () => {
         const clone = structuredClone(registerData);
         delete clone.email;
-        controller.login(clone, localUser).catch((err) => {
-          expect(err).toEqual(new errors.IncorrectLogin(localUser.tempId));
+        controller.register(clone, localUser).catch((err) => {
+          expect(err).toEqual(new errors.IncorrectCredentials(localUser.tempId, 'Email missing'));
         });
       });
     });
@@ -89,7 +85,7 @@ describe('Register', () => {
         });
       });
 
-      it(`Login incorrect`, async () => {
+      it(`Register incorrect`, async () => {
         controller.register({ ...registerData, login: '!@#$%^&*&*()_+P{:"<?a' }, localUser).catch((err) => {
           expect(err).toEqual(
             new errors.IncorrectCredentials(
@@ -197,7 +193,7 @@ describe('Register', () => {
       await db.cleanUp();
     });
 
-    it(`Validated register`, async () => {
+    it(`Validated`, async () => {
       controller.register({ ...registerData, email: 'test22@test.test' }, localUser).catch((err) => {
         expect(err.name).toEqual('MongoPoolClosedError');
       });
