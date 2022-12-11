@@ -9,7 +9,7 @@ import express from 'express';
 import userValidation from '../tools/token';
 
 export default class Router {
-  private readonly app: express.Express;
+  readonly app: express.Express;
   private server: http.Server;
   private middleware: Middleware;
 

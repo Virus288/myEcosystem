@@ -7,7 +7,10 @@ const config: Config = {
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'mts', 'ts'],
   testPathIgnorePatterns: ['build'],
   preset: 'ts-jest',
+  testMatch: ['**/*.test.ts'],
   testEnvironment: 'node',
+  forceExit: true,
+  clearMocks: true,
 };
 
 export default config;

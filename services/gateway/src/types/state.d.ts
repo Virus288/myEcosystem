@@ -2,8 +2,8 @@ import Router from '../router';
 import Broker from '../broker';
 
 export interface IState {
-  Broker: Broker;
-  Router: Router;
+  broker: Broker;
+  router: Router;
 }
 
 export interface IConfigInterface {

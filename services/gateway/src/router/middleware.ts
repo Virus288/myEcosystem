@@ -29,10 +29,17 @@ export default class Middleware {
   generateErrHandler(app: Express): void {
     app.use((err: express.Errback, req: express.Request, res: types.ILocalUser, next: express.NextFunction) => {
       Log.error('Middleware', 'Generic err');
-      Log.log('Middleware', err);
+      Log.error('Middleware', err.name);
       errLogger.error('Caught new generic error').error(`Caused by ${req.ip}`).error(JSON.stringify(err));
-      const { message, code, name, status } = new InternalError();
-      res.status(status).json({ message, code, name });
+
+      if (err.name === 'SyntaxError') {
+        const { message, code, name, status } = new InternalError();
+        res.status(status).json({ message, code, name });
+      } else {
+        const { message, code, name, status } = new InternalError();
+        res.status(status).json({ message, code, name });
+      }
+
       next();
     });
   }

@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "login": "Sebastien",
+      "email": "seb@gmail.uk",
+      "password": "Password123",
+      "password2": "Password123"
+    },
+    {
+      "login": "Ann",
+      "email": "a2@asb.zzz",
+      "password": "ILoveYou",
+      "password2": "ILoveYou"
+    },
+    {
+      "login": "Jakob",
+      "email": "jakobt@k.com",
+      "password": "4dfghjGIKJ-9-SJPA",
+      "password2": "4dfghjGIKJ-9-SJPA"
+    },
+    {
+      "login": "Marshal",
+      "email": "marhalbaney@amazon.com",
+      "password": "qwerty111",
+      "password2": "qwerty111"
+    },
+    {
+      "login": "Stephan",
+      "email": "randomemail123@gmail.com",
+      "password": "bananaMan3",
+      "password2": "bananaMan3"
+    },
+    {
+      "login": "Jack",
+      "email": "jk8@wp.pl",
+      "password": "GreenTee9",
+      "password2": "GreenTee9"
+    },
+    {
+      "login": "Mary",
+      "email": "marystephens@horyzont.eu",
+      "password": "Test123",
+      "password2": "Test123"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ export interface IUserLean {
   _id: mongoose.Types.ObjectId;
   login: string;
   email: string;
-  verified: string;
+  verified: boolean;
   password: string;
   type: enums.EUserTypes;
 }

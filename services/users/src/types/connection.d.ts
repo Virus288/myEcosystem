@@ -1,8 +1,8 @@
-import { ILocalUser } from './user';
+import type * as types from './';
 import * as enums from '../enums';
 
 export interface IRabbitMessage {
-  user: ILocalUser;
+  user: types.ILocalUser;
   target: enums.EUserTargets | enums.EMessageTypes;
   payload: unknown;
 }

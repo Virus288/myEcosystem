@@ -1,5 +1,21 @@
 # Changelog
 
+### 0.2.2
+
+```markdown
+- Added db tests for users
+- Added e2e tests for gateway
+- Connected mongoDB for users
+```
+
+### 0.2.1
+
+```markdown
+- Added e2e tests for users in users
+- Added unit tests for users in gateway
+- Added simple mocking system for mongoDB database
+```
+
 ### 0.2.0 Wrote users service
 
 ```markdown
